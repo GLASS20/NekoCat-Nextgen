@@ -1,14 +1,15 @@
 package link.liycxc.modules.impl.movement.noslow.impl;
 
+import link.liycxc.api.events.EventTarget;
+import link.liycxc.api.events.impl.EventPreMotion;
+import link.liycxc.api.events.impl.EventSendPacket;
+import link.liycxc.api.events.impl.EventSlowDown;
+import link.liycxc.manages.component.impl.RotationComponent;
+import link.liycxc.modules.impl.movement.noslow.NoSlowMode;
 import link.liycxc.utils.player.MoveUtil;
 import link.liycxc.utils.player.MovementFix;
 import link.liycxc.utils.player.PacketUtil;
 import link.liycxc.utils.vector.Vector2f;
-import link.liycxc.api.events.EventTarget;
-import link.liycxc.api.events.impl.EventPreMotion;
-import link.liycxc.api.events.impl.EventSendPacket;
-import link.liycxc.manages.component.impl.RotationComponent;
-import link.liycxc.modules.impl.movement.noslow.NoSlowMode;
 import net.minecraft.item.*;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
@@ -48,6 +49,13 @@ public class WatchdogMode extends NoSlowMode {
                 RotationComponent.setRotations(new Vector2f(mc.thePlayer.rotationYaw, 90f), 10, MovementFix.OFF);
                 sendUseItem(position);
             }
+        }
+    }
+
+    @EventTarget
+    public void onSlowDown(EventSlowDown event) {
+        if (MoveUtil.isMoving()) {
+            event.setCancelled(true);
         }
     }
 
